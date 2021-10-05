@@ -1,18 +1,28 @@
-use std::{thread, time};
+use std::{thread, time, env};
 
-const WORLD_LENGTH: usize = 17;
+const WORLD_LENGTH: usize = 100;
 const ALIVE: &str = "▒";
 const DEAD: &str = " ";
-const START_WORLD: [bool; WORLD_LENGTH] = [false, false, false, true, true, true, false, false, true, true, false, false, true, true, false, true, false];
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    let mut start_world: [bool; WORLD_LENGTH] = [false; WORLD_LENGTH];
+    for (index, arg) in args.iter().enumerate() {
+        if index >= WORLD_LENGTH {
+            break;
+        }
+        if arg == &"1" {
+            start_world[index] = true;
+        }
+    }
+
     let sleep_time = time::Duration::from_millis(100);
 
     print!("\x1B[2J"); // Clear terminal
     print!("\x1B[H"); // Move to top left
     println!("Simulation:");
 
-    let mut sim = Simulation::new(START_WORLD, 2);
+    let mut sim = Simulation::new(start_world, 2);
     sim.paint();
     thread::sleep(sleep_time);
 
