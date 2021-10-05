@@ -22,7 +22,7 @@ fn main() {
     print!("\x1B[H"); // Move to top left
     println!("Simulation:");
 
-    let mut sim = Simulation::new(start_world, 2);
+    let mut sim = Simulation::new(start_world);
     sim.paint();
     thread::sleep(sleep_time);
 
@@ -39,22 +39,19 @@ fn main() {
 
 struct Simulation {
     world: [bool; WORLD_LENGTH],
-    offset: usize,
 }
 
 impl Simulation {
-    pub fn new(initial_world: [bool; WORLD_LENGTH], offset: usize) -> Simulation {
+    pub fn new(initial_world: [bool; WORLD_LENGTH]) -> Simulation {
         return Simulation {
             world: initial_world,
-            offset,
         }
     }
 
     // TODO: Replace by implement of fmt display?
     pub fn paint(&mut self) {
         let row: String = self.world.iter().map(|&v| { if v { ALIVE } else { DEAD }}).collect();
-        write_row(&row, self.offset);
-        self.offset += 1;
+        write_row(&row);
     }
 
     pub fn next_state(&mut self) {
@@ -98,6 +95,6 @@ fn rule_110(pattern: [bool; 3]) -> bool {
     return false;
 }
 
-fn write_row(content: &str, row: usize) {
+fn write_row(content: &str) {
     println!("{}", content);
 }
