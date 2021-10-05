@@ -1,5 +1,4 @@
 use std::{thread, time};
-use termion::{clear, cursor};
 
 const WORLD_LENGTH: usize = 17;
 const ALIVE: &str = "▒";
@@ -9,7 +8,9 @@ const START_WORLD: [bool; WORLD_LENGTH] = [false, false, false, true, true, true
 fn main() {
     let sleep_time = time::Duration::from_millis(100);
 
-    print!("{}{}Simulation:\n", clear::All, cursor::Goto(1,1));
+    print!("\x1B[2J"); // Clear terminal
+    print!("\x1B[H"); // Move to top left
+    println!("Simulation:");
 
     let mut sim = Simulation::new(START_WORLD, 2);
     sim.paint();
