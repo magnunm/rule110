@@ -3,6 +3,7 @@ use std::{thread, time, env};
 const ALIVE: &str = "▒";
 const DEAD: &str = " ";
 const SLEEP_MILLIS: u64 = 50;
+const RULE_110_WOLFRAM_CODE: [bool; 8] = [false, true, true, false, true, true, true, false];
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -20,7 +21,8 @@ fn main() {
     print!("\x1B[H"); // Move to top left
     println!("Simulation:");
 
-    let mut sim = Simulation::new(start_world);
+    let rule = Rule::new(RULE_110_WOLFRAM_CODE);
+    let mut sim = Simulation::new(start_world, &rule);
     let sleep_time = time::Duration::from_millis(SLEEP_MILLIS);
     sim.paint();
     thread::sleep(sleep_time);
@@ -32,18 +34,19 @@ fn main() {
     }
 }
 
-
-struct Simulation {
+struct Simulation<'a> {
     world: Vec<bool>,
+    rule: &'a Rule,
 }
 
-impl Simulation {
-    pub fn new(initial_world: Vec<bool>) -> Simulation {
+impl<'a> Simulation<'a> {
+    pub fn new(initial_world: Vec<bool>, rule: &Rule) -> Simulation {
         if initial_world.len() < 2 {
             panic!("World is too short!");
         }
         return Simulation {
             world: initial_world,
+            rule,
         }
     }
 
@@ -58,43 +61,58 @@ impl Simulation {
     }
 
     fn next_world(&self) -> Vec<bool> {
-        // TODO: For now the 110 rule is hard-coded. Allow arbitrary rules later.
         let current_world = &self.world;
         let mut next_world: Vec<bool> = Vec::new();
         let world_length = current_world.len();
 
-        next_world.push(rule_110(
-            [current_world[world_length - 1], current_world[0], current_world[1]]
-        ));
+        next_world.push(
+            self.rule.apply(
+                [current_world[world_length - 1], current_world[0], current_world[1]]
+            )
+        );
 
         for i in 1..(world_length - 1) {
-            next_world.push(rule_110(
-                [current_world[i - 1], current_world[i], current_world[i + 1]]
-            ));
+            next_world.push(
+                self.rule.apply(
+                    [current_world[i - 1], current_world[i], current_world[i + 1]]
+                )
+            );
         }
 
-        next_world.push(rule_110(
-            [current_world[world_length - 2], current_world[world_length - 1], current_world[0]]
-        ));
+        next_world.push(
+            self.rule.apply(
+                [current_world[world_length - 2], current_world[world_length - 1], current_world[0]]
+            )
+        );
 
         return next_world;
     }
 }
 
-fn rule_110(pattern: [bool; 3]) -> bool {
-    match pattern {
-        [true, true, true] => (),
-        [true, true, false] => { return true; },
-        [true, false, true] => { return true; },
-        [true, false, false] => (),
-        [false, true, true] => { return true; },
-        [false, true, false] => { return true; },
-        [false, false, true] => { return true; },
-        [false, false, false] => (),
     }
-    return false;
 }
 
 fn write_row(content: &str) {
     println!("{}", content);
+struct Rule {
+    wolfram_code: [bool; 8]
+}
+
+impl Rule {
+    pub fn new(wolfram_code: [bool; 8]) -> Rule {
+        Rule { wolfram_code }
+    }
+
+    pub fn apply(&self, pattern: [bool; 3]) -> bool {
+        match pattern {
+            [true, true, true] => { return self.wolfram_code[0] },
+            [true, true, false] => { return self.wolfram_code[1] },
+            [true, false, true] => { return self.wolfram_code[2] },
+            [true, false, false] => { return self.wolfram_code[3] },
+            [false, true, true] => { return self.wolfram_code[4] },
+            [false, true, false] => { return self.wolfram_code[5] },
+            [false, false, true] => { return self.wolfram_code[6] },
+            [false, false, false] => { return self.wolfram_code[7] },
+        }
+    }
 }
