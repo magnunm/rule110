@@ -1,0 +1,3 @@
+#+TITLE: Rule 110
+
+Playing with [[https://en.wikipedia.org/wiki/Elementary_cellular_automaton][elementary cellular automata]].
