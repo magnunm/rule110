@@ -1,3 +1,6 @@
 #+TITLE: Rule 110
 
 Playing with [[https://en.wikipedia.org/wiki/Elementary_cellular_automaton][elementary cellular automata]].
+#+BEGIN_SRC shell
+  cat spaceship_1.txt | xargs cargo run
+#+END_SRC
