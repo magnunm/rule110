@@ -25,14 +25,11 @@ fn main() {
     sim.paint();
     thread::sleep(sleep_time);
 
-    for _ in 0..100 {
+    loop {
         sim.next_state();
         sim.paint();
         thread::sleep(sleep_time);
     }
-
-    print!("\n");
-    println!("Simulation done.")
 }
 
 
