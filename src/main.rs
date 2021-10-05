@@ -1,6 +1,6 @@
 use std::{thread, time, env};
 
-const WORLD_LENGTH: usize = 100;
+const WORLD_LENGTH: usize = 150;
 const ALIVE: &str = "▒";
 const DEAD: &str = " ";
 
@@ -16,7 +16,7 @@ fn main() {
         }
     }
 
-    let sleep_time = time::Duration::from_millis(100);
+    let sleep_time = time::Duration::from_millis(50);
 
     print!("\x1B[2J"); // Clear terminal
     print!("\x1B[H"); // Move to top left
