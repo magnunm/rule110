@@ -26,7 +26,7 @@ fn main() {
     thread::sleep(sleep_time);
 
     loop {
-        sim.next_state();
+        sim.advance();
         println!("{}", sim);
         thread::sleep(sleep_time);
     }
@@ -48,7 +48,7 @@ impl<'a> Simulation<'a> {
         }
     }
 
-    pub fn next_state(&mut self) {
+    pub fn advance(&mut self) {
         self.world = self.next_world();
     }
 
