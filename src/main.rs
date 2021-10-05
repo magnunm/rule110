@@ -1,18 +1,17 @@
 use std::{thread, time, env};
 
-const WORLD_LENGTH: usize = 150;
 const ALIVE: &str = "▒";
 const DEAD: &str = " ";
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let mut start_world: [bool; WORLD_LENGTH] = [false; WORLD_LENGTH];
-    for (index, arg) in args.iter().enumerate() {
-        if index >= WORLD_LENGTH {
-            break;
-        }
+    let mut start_world: Vec<bool> = Vec::new();
+    for arg in args.iter() {
         if arg == &"1" {
-            start_world[index] = true;
+            start_world.push(true);
+        }
+        else {
+            start_world.push(false);
         }
     }
 
@@ -38,11 +37,11 @@ fn main() {
 
 
 struct Simulation {
-    world: [bool; WORLD_LENGTH],
+    world: Vec<bool>,
 }
 
 impl Simulation {
-    pub fn new(initial_world: [bool; WORLD_LENGTH]) -> Simulation {
+    pub fn new(initial_world: Vec<bool>) -> Simulation {
         return Simulation {
             world: initial_world,
         }
@@ -58,24 +57,29 @@ impl Simulation {
         self.world = self.next_world();
     }
 
-    fn next_world(&self) -> [bool; WORLD_LENGTH] {
+    fn next_world(&self) -> Vec<bool> {
         // TODO: For now the 110 rule is hard-coded. Allow arbitrary rules later.
-        let current_world = self.world;
-        let mut next_world: [bool; WORLD_LENGTH] = [false; WORLD_LENGTH];
+        let current_world = &self.world;
+        let mut next_world: Vec<bool> = Vec::new();
+        let world_length = current_world.len();
 
-        next_world[0] = rule_110(
-            [current_world[WORLD_LENGTH - 1], current_world[0], current_world[1]]
-        );
-
-        for i in 1..(WORLD_LENGTH - 1) {
-            next_world[i] = rule_110(
-                [current_world[i - 1], current_world[i], current_world[i + 1]]
-            );
+        if world_length < 2 {
+            panic!("Too short!");
         }
 
-        next_world[WORLD_LENGTH - 1] = rule_110(
-            [current_world[WORLD_LENGTH - 2], current_world[WORLD_LENGTH - 2], current_world[0]]
-        );
+        next_world.push(rule_110(
+            [current_world[world_length - 1], current_world[0], current_world[1]]
+        ));
+
+        for i in 1..(world_length - 1) {
+            next_world.push(rule_110(
+                [current_world[i - 1], current_world[i], current_world[i + 1]]
+            ));
+        }
+
+        next_world.push(rule_110(
+            [current_world[world_length - 2], current_world[world_length - 2], current_world[0]]
+        ));
 
         return next_world;
     }
