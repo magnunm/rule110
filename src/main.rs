@@ -9,12 +9,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let mut start_world: Vec<bool> = Vec::new();
     for arg in args[1..].iter() { // First arg is command
-        if arg == &"1" {
-            start_world.push(true);
-        }
-        else {
-            start_world.push(false);
-        }
+        start_world.push(arg == &"1");
     }
 
     print!("\x1B[2J\x1B[H"); // Clear terminal and move to top left
