@@ -18,7 +18,6 @@ fn main() {
     }
 
     print!("\x1B[2J\x1B[H"); // Clear terminal and move to top left
-    println!("Simulation:");
 
     let rule = Rule::new(RULE_110_WOLFRAM_CODE);
     let mut sim = Simulation::new(start_world, &rule);
