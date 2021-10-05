@@ -1,4 +1,4 @@
-use std::{thread, time, env};
+use std::{thread, time, env, fmt};
 
 const ALIVE: &str = "▒";
 const DEAD: &str = " ";
@@ -17,19 +17,18 @@ fn main() {
         }
     }
 
-    print!("\x1B[2J"); // Clear terminal
-    print!("\x1B[H"); // Move to top left
+    print!("\x1B[2J\x1B[H"); // Clear terminal and move to top left
     println!("Simulation:");
 
     let rule = Rule::new(RULE_110_WOLFRAM_CODE);
     let mut sim = Simulation::new(start_world, &rule);
     let sleep_time = time::Duration::from_millis(SLEEP_MILLIS);
-    sim.paint();
+    println!("{}", sim);
     thread::sleep(sleep_time);
 
     loop {
         sim.next_state();
-        sim.paint();
+        println!("{}", sim);
         thread::sleep(sleep_time);
     }
 }
@@ -48,12 +47,6 @@ impl<'a> Simulation<'a> {
             world: initial_world,
             rule,
         }
-    }
-
-    // TODO: Replace by implement of fmt display?
-    pub fn paint(&mut self) {
-        let row: String = self.world.iter().map(|&v| { if v { ALIVE } else { DEAD }}).collect();
-        write_row(&row);
     }
 
     pub fn next_state(&mut self) {
@@ -89,11 +82,13 @@ impl<'a> Simulation<'a> {
     }
 }
 
+impl fmt::Display for Simulation<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let row: String = self.world.iter().map(|&v| { if v { ALIVE } else { DEAD }}).collect();
+        write!(f, "{}", row)
     }
 }
 
-fn write_row(content: &str) {
-    println!("{}", content);
 struct Rule {
     wolfram_code: [bool; 8]
 }
