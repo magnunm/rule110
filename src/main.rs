@@ -78,7 +78,7 @@ impl Simulation {
         }
 
         next_world.push(rule_110(
-            [current_world[world_length - 2], current_world[world_length - 2], current_world[0]]
+            [current_world[world_length - 2], current_world[world_length - 1], current_world[0]]
         ));
 
         return next_world;
