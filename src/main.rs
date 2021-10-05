@@ -2,6 +2,7 @@ use std::{thread, time, env};
 
 const ALIVE: &str = "▒";
 const DEAD: &str = " ";
+const SLEEP_MILLIS: u64 = 50;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -15,13 +16,12 @@ fn main() {
         }
     }
 
-    let sleep_time = time::Duration::from_millis(50);
-
     print!("\x1B[2J"); // Clear terminal
     print!("\x1B[H"); // Move to top left
     println!("Simulation:");
 
     let mut sim = Simulation::new(start_world);
+    let sleep_time = time::Duration::from_millis(SLEEP_MILLIS);
     sim.paint();
     thread::sleep(sleep_time);
 
