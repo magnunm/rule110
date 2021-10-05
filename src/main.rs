@@ -42,6 +42,9 @@ struct Simulation {
 
 impl Simulation {
     pub fn new(initial_world: Vec<bool>) -> Simulation {
+        if initial_world.len() < 2 {
+            panic!("World is too short!");
+        }
         return Simulation {
             world: initial_world,
         }
@@ -62,10 +65,6 @@ impl Simulation {
         let current_world = &self.world;
         let mut next_world: Vec<bool> = Vec::new();
         let world_length = current_world.len();
-
-        if world_length < 2 {
-            panic!("Too short!");
-        }
 
         next_world.push(rule_110(
             [current_world[world_length - 1], current_world[0], current_world[1]]
