@@ -6,7 +6,7 @@ const DEAD: &str = " ";
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut start_world: Vec<bool> = Vec::new();
-    for arg in args.iter() {
+    for arg in args[1..].iter() { // First arg is command
         if arg == &"1" {
             start_world.push(true);
         }
