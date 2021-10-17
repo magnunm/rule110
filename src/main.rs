@@ -1,3 +1,4 @@
+#![feature(destructuring_assignment)]
 use std::{thread, time, env, fmt};
 
 const ALIVE: &str = "▒";
@@ -48,30 +49,23 @@ impl<'a> Simulation<'a> {
     }
 
     fn next_world(&self) -> Vec<bool> {
-        let current_world = &self.world;
         let mut next_world: Vec<bool> = Vec::new();
-        let world_length = current_world.len();
 
-        next_world.push(
-            self.rule.apply(
-                [current_world[world_length - 1], current_world[0], current_world[1]]
-            )
-        );
+        let world_start = [self.world[0]];
+        let world_end = [self.world[self.world.len() - 1]];
+        let mut cyclic_world = world_end.iter()
+            .chain(self.world.iter())
+            .chain(world_start.iter());
 
-        for i in 1..(world_length - 1) {
+        let (mut prev, mut current, mut next) =
+            (cyclic_world.next(), cyclic_world.next(), cyclic_world.next());
+
+        while next.is_some() {
             next_world.push(
-                self.rule.apply(
-                    [current_world[i - 1], current_world[i], current_world[i + 1]]
-                )
+                self.rule.apply([*prev.unwrap(), *current.unwrap(), *next.unwrap()])
             );
+            (prev, current, next) = (current, next, cyclic_world.next());
         }
-
-        next_world.push(
-            self.rule.apply(
-                [current_world[world_length - 2], current_world[world_length - 1], current_world[0]]
-            )
-        );
-
         return next_world;
     }
 }

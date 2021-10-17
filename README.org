@@ -2,6 +2,6 @@
 
 Playing with [[https://en.wikipedia.org/wiki/Elementary_cellular_automaton][elementary cellular automata]].
 #+BEGIN_SRC shell
-  cat spaceship_1.txt | xargs cargo run
+  cat spaceship_1.txt | xargs cargo +nightly run
 #+END_SRC
 Zoom the terminal out to avoid line wrapping.
