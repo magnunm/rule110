@@ -4,3 +4,4 @@ Playing with [[https://en.wikipedia.org/wiki/Elementary_cellular_automaton][elem
 #+BEGIN_SRC shell
   cat spaceship_1.txt | xargs cargo run
 #+END_SRC
+Zoom the terminal out to avoid line wrapping.
